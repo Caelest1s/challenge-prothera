@@ -14,8 +14,7 @@ public class FunctionaryDTO {
 
     }
 
-    public FunctionaryDTO(Long id, String office, Double salary) {
-        this.id = id;
+    public FunctionaryDTO(String office, Double salary) {
         this.office = office;
         this.salary = salary;
     }

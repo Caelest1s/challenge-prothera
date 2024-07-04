@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.challenge.prothera.dto.FunctionaryDTO;
 import com.challenge.prothera.entities.Functionary;
+import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.FunctionaryRepository;
 
 @Service
@@ -18,6 +19,19 @@ public class FunctionaryService {
 
     @Autowired
     private FunctionaryRepository repository;
+
+    public FunctionaryDTO insert(FunctionaryDTO dto) {
+        Functionary entity = new Functionary();
+        copyDtoToEntity(dto, entity);
+        repository.save(entity);
+        return dto;
+    }
+
+    private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
+        entity.setOffice(dto.getOffice());
+        entity.setSalary(dto.getSalary());
+        entity.setPerson(new Person(dto.getPersonDTO().getName(), dto.getPersonDTO().getBirthDate()));
+    }
 
     public void delete(Long id) {
 
@@ -27,6 +41,12 @@ public class FunctionaryService {
     public FunctionaryDTO findById(Long id) {
         Optional<Functionary> result = repository.findById(id);
         return copyFunctionaryToDto(result);
+    }
+
+    private FunctionaryDTO copyFunctionaryToDto(Optional<Functionary> entity) {
+        Functionary functionary = entity.get();
+        FunctionaryDTO dto = new FunctionaryDTO(functionary);
+        return dto;
     }
 
     @Transactional(readOnly = true)
@@ -41,9 +61,4 @@ public class FunctionaryService {
         return result.stream().map(x -> new FunctionaryDTO(x)).toList();
     }
 
-    private FunctionaryDTO copyFunctionaryToDto(Optional<Functionary> entity) {
-        Functionary functionary = entity.get();
-        FunctionaryDTO dto = new FunctionaryDTO(functionary);
-        return dto;
-    }
 }

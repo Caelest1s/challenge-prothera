@@ -14,8 +14,7 @@ public class PersonDTO {
 
     }
 
-    public PersonDTO(Long id, String name, LocalDate birthDate) {
-        this.id = id;
+    public PersonDTO(String name, LocalDate birthDate) {
         this.name = name;
         this.birthDate = birthDate;
     }
