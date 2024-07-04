@@ -3,6 +3,8 @@ package com.challenge.prothera.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +43,11 @@ public class PersonService {
         Person person = entity.get();
         PersonDTO dto = new PersonDTO(person);
         return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PersonDTO> findAll(Pageable pageable) {
+        Page<Person> result = repository.findAll(pageable);
+        return result.map(x -> new PersonDTO(x));
     }
 }

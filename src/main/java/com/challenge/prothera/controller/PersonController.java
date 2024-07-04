@@ -1,6 +1,8 @@
 package com.challenge.prothera.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,12 @@ public class PersonController {
     @GetMapping(value = "{id}")
     public PersonDTO findById(@PathVariable Long id) {
         PersonDTO result = personService.findById(id);
+        return result;
+    }
+
+    @GetMapping
+    public Page<PersonDTO> findAll(Pageable pageable) {
+        Page<PersonDTO> result = personService.findAll(pageable);
         return result;
     }
 }
