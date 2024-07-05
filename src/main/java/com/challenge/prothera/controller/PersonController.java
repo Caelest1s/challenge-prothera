@@ -26,10 +26,10 @@ public class PersonController {
 
     @PostMapping
     public ResponseEntity<PersonDTO> insert(@RequestBody PersonDTO dto) {
-        PersonDTO t1 = service.insert(dto);
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
-        return ResponseEntity.created(uri).body(t1);
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping(value = "/{id}")

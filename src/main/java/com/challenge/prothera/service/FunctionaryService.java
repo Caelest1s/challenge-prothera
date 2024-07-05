@@ -23,6 +23,7 @@ public class FunctionaryService {
     @Autowired
     private FunctionaryRepository repository;
 
+    @Transactional
     public FunctionaryDTO insert(FunctionaryDTO dto) {
         Functionary entity = new Functionary();
         copyDtoToEntity(dto, entity);
@@ -31,15 +32,17 @@ public class FunctionaryService {
     }
 
     private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
+        System.out.println(entity);
         entity.setOffice(dto.getOffice());
         entity.setSalary(dto.getSalary());
-        entity.setPerson(new Person(dto.getPersonDTO().getName(),
-                dto.getPersonDTO().getBirthDate()));
     }
 
+    @Transactional
     public FunctionaryDTO update(Long id, FunctionaryDTO dto) {
         try {
-            Functionary entity = repository.getReferenceById(id);
+            Functionary entity = new Functionary();
+            entity.setPerson(new Person());
+            entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
             return new FunctionaryDTO(entity);
