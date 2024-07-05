@@ -13,6 +13,9 @@ import com.challenge.prothera.dto.FunctionaryDTO;
 import com.challenge.prothera.entities.Functionary;
 import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.FunctionaryRepository;
+import com.challenge.prothera.service.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class FunctionaryService {
@@ -30,7 +33,19 @@ public class FunctionaryService {
     private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
         entity.setOffice(dto.getOffice());
         entity.setSalary(dto.getSalary());
-        entity.setPerson(new Person(dto.getPersonDTO().getName(), dto.getPersonDTO().getBirthDate()));
+        entity.setPerson(new Person(dto.getPersonDTO().getName(),
+                dto.getPersonDTO().getBirthDate()));
+    }
+
+    public FunctionaryDTO update(Long id, FunctionaryDTO dto) {
+        try {
+            Functionary entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new FunctionaryDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
     }
 
     public void delete(Long id) {

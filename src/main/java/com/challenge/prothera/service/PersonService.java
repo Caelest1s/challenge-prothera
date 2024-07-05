@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.challenge.prothera.dto.PersonDTO;
 import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.PersonRepository;
+import com.challenge.prothera.service.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PersonService {
@@ -28,6 +31,18 @@ public class PersonService {
     private void copyDtoToPerson(PersonDTO dto, Person entity) {
         entity.setName(dto.getName());
         entity.setBirthDate(dto.getBirthDate());
+    }
+
+    @Transactional
+    public PersonDTO update(Long id, PersonDTO dto) {
+        try {
+            Person entity = repository.getReferenceById(id);
+            copyDtoToPerson(dto, entity);
+            entity = repository.save(entity);
+            return dto;
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
     }
 
     @Transactional(readOnly = true)
