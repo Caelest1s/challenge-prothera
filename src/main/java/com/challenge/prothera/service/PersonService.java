@@ -1,10 +1,9 @@
 package com.challenge.prothera.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +20,14 @@ public class PersonService {
     @Transactional
     public PersonDTO insert(PersonDTO dto) {
         Person entity = new Person();
-        entity = copyDtoToPerson(dto);
+        copyDtoToPerson(dto, entity);
         repository.save(entity);
         return dto;
     }
 
-    private Person copyDtoToPerson(PersonDTO dto) {
-        Person entity = new Person();
+    private void copyDtoToPerson(PersonDTO dto, Person entity) {
         entity.setName(dto.getName());
         entity.setBirthDate(dto.getBirthDate());
-        return entity;
     }
 
     @Transactional(readOnly = true)
@@ -46,8 +43,9 @@ public class PersonService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PersonDTO> findAll(Pageable pageable) {
-        Page<Person> result = repository.findAll(pageable);
-        return result.map(x -> new PersonDTO(x));
+    public List<PersonDTO> findAll() {
+        // Page<Person> result = repository.findAllPersonPage(pageable);
+        List<Person> result = repository.findAllPerson();
+        return result.stream().map(x -> new PersonDTO(x)).toList();
     }
 }

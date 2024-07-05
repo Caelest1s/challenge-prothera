@@ -12,3 +12,5 @@ INSERT INTO tb_functionary (person_id, salary, office) VALUES (4, 4000, 'Finanç
 
 INSERT INTO tb_person(name, birth_date) VALUES ('Clarice', TIMESTAMP WITH TIME ZONE '2029-04-13T22:00:00Z');
 INSERT INTO tb_functionary (person_id, salary, office) VALUES (5, 2000, 'Médica');
+
+INSERT INTO tb_person(name, birth_date) VALUES ('Celeste', TIMESTAMP WITH TIME ZONE '2030-04-13T22:00:00Z');
