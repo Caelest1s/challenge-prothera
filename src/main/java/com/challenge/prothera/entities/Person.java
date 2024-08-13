@@ -26,7 +26,8 @@ public class Person {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDate birthDate;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL,
+            CascadeType.REMOVE }, orphanRemoval = true)
     private Functionary functionary;
 
     public Person() {

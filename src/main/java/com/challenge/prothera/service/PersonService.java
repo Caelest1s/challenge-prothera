@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.challenge.prothera.dto.PersonDTO;
 import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.PersonRepository;
+import com.challenge.prothera.service.exceptions.DataBaseException;
 import com.challenge.prothera.service.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,13 +21,13 @@ import jakarta.persistence.EntityNotFoundException;
 public class PersonService {
 
     @Autowired
-    private PersonRepository repository;
+    private PersonRepository personRepository;
 
     @Transactional
     public PersonDTO insert(PersonDTO dto) {
         Person entity = new Person();
         copyDtoToPerson(dto, entity);
-        repository.save(entity);
+        personRepository.save(entity);
         return dto;
     }
 
@@ -36,18 +39,29 @@ public class PersonService {
     @Transactional
     public PersonDTO update(Long id, PersonDTO dto) {
         try {
-            Person entity = repository.getReferenceById(id);
+            Person entity = personRepository.getReferenceById(id);
             copyDtoToPerson(dto, entity);
-            entity = repository.save(entity);
-            return dto;
+            entity = personRepository.save(entity);
+            return new PersonDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        try {
+            personRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Falha de integridade referencial");
+        }
+    }
+
     @Transactional(readOnly = true)
     public PersonDTO findById(Long id) {
-        Optional<Person> result = repository.findById(id);
+        Optional<Person> result = personRepository.findById(id);
         return copyPersonToDto(result);
     }
 
@@ -59,8 +73,8 @@ public class PersonService {
 
     @Transactional(readOnly = true)
     public List<PersonDTO> findAll() {
-        // Page<Person> result = repository.findAllPersonPage(pageable);
-        List<Person> result = repository.findAllPerson();
+        // Page<Person> result = personRepository.findAllPersonPage(pageable);
+        List<Person> result = personRepository.findAllPerson();
         return result.stream().map(x -> new PersonDTO(x)).toList();
     }
 }

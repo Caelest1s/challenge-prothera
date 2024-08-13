@@ -23,9 +23,9 @@ public class Functionary {
     @Column
     private Double salary;
 
-    @OneToOne()
+    @OneToOne(optional = false)
     @MapsId
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
     public Functionary() {
