@@ -28,7 +28,6 @@ public class FunctionaryController {
 
     @PostMapping
     public ResponseEntity<FunctionaryDTO> insert(@RequestBody FunctionaryDTO dto) {
-        System.out.println("Valor do DTO na classe Controller: " + dto.getPersonDTO().getId());
         serviceFunctionary.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -60,12 +59,12 @@ public class FunctionaryController {
     }
 
     public void insertAllFunctionary() {
-        List<FunctionaryDTO> result = populateListFunctionary();
+        // List<FunctionaryDTO> result = populateListFunctionary();
         // continuar aqui
     }
 
     public List<FunctionaryDTO> populateListFunctionary() {
-        List<FunctionaryDTO> listFunctionary = new ArrayList<>();
+        List<FunctionaryDTO> listFunctionary = new ArrayList<FunctionaryDTO>();
         listFunctionary.add(new FunctionaryDTO("Operador", 2009.44D));
         listFunctionary.add(new FunctionaryDTO("Operador", 2284.38D));
         listFunctionary.add(new FunctionaryDTO("Coordenador", 9836.14D));

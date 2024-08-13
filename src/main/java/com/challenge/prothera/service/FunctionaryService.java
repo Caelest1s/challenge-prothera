@@ -1,5 +1,6 @@
 package com.challenge.prothera.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,35 +33,20 @@ public class FunctionaryService {
 
     @Transactional
     public FunctionaryDTO insert(FunctionaryDTO dto) {
-        // a pessoa existe
-        // localizar a pessoa
-        // salvar funcionario
-
-        Long id_person = dto.getPersonDTO().getId();
+        String name = dto.getPersonDTO().getName();
+        LocalDate birthDate = dto.getPersonDTO().getBirthDate();
+        String office = dto.getOffice();
+        Double salary = dto.getSalary();
 
         try {
-            Person result = personRepository.getReferenceById(id_person);
+            Person person = new Person(name, birthDate);
+            Functionary functionary = new Functionary(null, office, salary, person);
 
-            Functionary entity = new Functionary();
-            entity.setPerson(result);
-            System.out.println("valor de PESSOA: " + entity.getPerson());
-            copyDtoToEntity(dto, entity);
-            System.out.println("valor de PESSOA depois de copiar: " + entity.getPerson());
-
-            entity = functionaryRepository.save(entity);
-            return new FunctionaryDTO(entity);
-
+            functionary = functionaryRepository.save(functionary);
+            return new FunctionaryDTO(functionary);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("recurso não encontrado");
         }
-    }
-
-    @Transactional
-    public FunctionaryDTO insertFunctionaryWithDto(FunctionaryDTO dto) {
-        // a pessoa não existe
-        // salvar pessoa
-        // salvar funcionario
-        return dto;
     }
 
     private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
@@ -71,14 +57,13 @@ public class FunctionaryService {
     @Transactional
     public FunctionaryDTO update(Long id, FunctionaryDTO dto) {
         try {
-            Person result_person = personRepository.findById(id)
+            Person person = personRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
-
             Functionary functionary = functionaryRepository.findById(id)
                     .orElseGet(() -> new Functionary());
 
             if (functionary.getId() == null) {
-                functionary.setPerson(result_person);
+                functionary.setPerson(person);
                 copyDtoToEntity(dto, functionary);
                 functionaryRepository.save(functionary);
             } else {
@@ -86,6 +71,7 @@ public class FunctionaryService {
                 copyDtoToEntity(dto, functionary);
                 functionaryRepository.save(functionary);
             }
+
             return new FunctionaryDTO(functionary);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");

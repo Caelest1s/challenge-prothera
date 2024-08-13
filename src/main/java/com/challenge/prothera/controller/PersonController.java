@@ -72,7 +72,7 @@ public class PersonController {
     }
 
     public List<PersonDTO> populateListPersons() {
-        List<PersonDTO> listPerson = new ArrayList();
+        List<PersonDTO> listPerson = new ArrayList<PersonDTO>();
         listPerson.add(new PersonDTO("Maria", LocalDate.parse("2000-10-18")));
         listPerson.add(new PersonDTO("Joao", LocalDate.parse("1990-05-12")));
         listPerson.add(new PersonDTO("Caio", LocalDate.parse("1961-05-02")));
