@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,16 +105,15 @@ public class FunctionaryService {
         return dto;
     }
 
-    @Transactional(readOnly = true)
-    public Page<FunctionaryDTO> findAll(Pageable pageable) {
-        Page<Functionary> entity = functionaryRepository.findAll(pageable);
-        return entity.map(x -> new FunctionaryDTO(x));
-    }
+    // @Transactional(readOnly = true)
+    // public Page<FunctionaryDTO> findAll(Pageable pageable) {
+    // Page<Functionary> entity = functionaryRepository.findAll(pageable);
+    // return entity.map(x -> new FunctionaryDTO(x));
+    // }
 
     @Transactional(readOnly = true)
     public List<FunctionaryDTO> findAllFunctionaryWithPerson() {
-        List<Functionary> entity = functionaryRepository.findFunctionaryWithPerson();
+        List<Functionary> entity = functionaryRepository.findAllFunctionaryWithPerson();
         return entity.stream().map(x -> new FunctionaryDTO(x)).toList();
     }
-
 }

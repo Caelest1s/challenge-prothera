@@ -11,7 +11,7 @@ import com.challenge.prothera.entities.Functionary;
 public interface FunctionaryRepository extends JpaRepository<Functionary, Long> {
 
     @Query("SELECT obj FROM Functionary obj JOIN FETCH obj.person")
-    List<Functionary> findFunctionaryWithPerson();
+    List<Functionary> findAllFunctionaryWithPerson();
 
     @Query("DELETE FROM Functionary obj WHERE obj.id = :id")
     void deleteFunctionary(@Param("id") Long id);

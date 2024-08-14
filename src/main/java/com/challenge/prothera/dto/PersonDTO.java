@@ -3,11 +3,14 @@ package com.challenge.prothera.dto;
 import java.time.LocalDate;
 
 import com.challenge.prothera.entities.Person;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PersonDTO {
 
     private Long id;
     private String name;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
 
     public PersonDTO() {

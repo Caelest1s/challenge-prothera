@@ -11,7 +11,6 @@ public class FunctionaryDTO {
     private PersonDTO personDTO;
 
     public FunctionaryDTO() {
-
     }
 
     public FunctionaryDTO(String office, Double salary) {

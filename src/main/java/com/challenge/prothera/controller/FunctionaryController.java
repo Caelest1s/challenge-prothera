@@ -1,7 +1,6 @@
 package com.challenge.prothera.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,24 +57,19 @@ public class FunctionaryController {
         return result;
     }
 
-    public void insertAllFunctionary() {
-        // List<FunctionaryDTO> result = populateListFunctionary();
-        // continuar aqui
-    }
-
-    public List<FunctionaryDTO> populateListFunctionary() {
-        List<FunctionaryDTO> listFunctionary = new ArrayList<FunctionaryDTO>();
-        listFunctionary.add(new FunctionaryDTO("Operador", 2009.44D));
-        listFunctionary.add(new FunctionaryDTO("Operador", 2284.38D));
-        listFunctionary.add(new FunctionaryDTO("Coordenador", 9836.14D));
-        listFunctionary.add(new FunctionaryDTO("Diretor", 19199.88D));
-        listFunctionary.add(new FunctionaryDTO("Recepcionista", 2234.68D));
-        listFunctionary.add(new FunctionaryDTO("Operador", 1582.72D));
-        listFunctionary.add(new FunctionaryDTO("Contador", 4071.84D));
-        listFunctionary.add(new FunctionaryDTO("Gerente", 3017.45D));
-        listFunctionary.add(new FunctionaryDTO("Eletricista", 1606.85D));
-        listFunctionary.add(new FunctionaryDTO("Gerente", 2799.93D));
-        return listFunctionary;
-    }
+    // public List<FunctionaryDTO> populateListFunctionary() {
+    // List<FunctionaryDTO> listFunctionary = new ArrayList<FunctionaryDTO>();
+    // listFunctionary.add(new FunctionaryDTO("Operador", 2009.44D));
+    // listFunctionary.add(new FunctionaryDTO("Operador", 2284.38D));
+    // listFunctionary.add(new FunctionaryDTO("Coordenador", 9836.14D));
+    // listFunctionary.add(new FunctionaryDTO("Diretor", 19199.88D));
+    // listFunctionary.add(new FunctionaryDTO("Recepcionista", 2234.68D));
+    // listFunctionary.add(new FunctionaryDTO("Operador", 1582.72D));
+    // listFunctionary.add(new FunctionaryDTO("Contador", 4071.84D));
+    // listFunctionary.add(new FunctionaryDTO("Gerente", 3017.45D));
+    // listFunctionary.add(new FunctionaryDTO("Eletricista", 1606.85D));
+    // listFunctionary.add(new FunctionaryDTO("Gerente", 2799.93D));
+    // return listFunctionary;
+    // }
 
 }
