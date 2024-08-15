@@ -31,7 +31,6 @@ public class Person {
     private Functionary functionary;
 
     public Person() {
-
     }
 
     public Person(String name, LocalDate birthDate) {

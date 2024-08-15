@@ -1,7 +1,5 @@
 package com.challenge.prothera.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.challenge.prothera.dto.FunctionaryDTO;
+import com.challenge.prothera.dto.FunctionaryRequestDTO;
+import com.challenge.prothera.dto.FunctionaryResponseDTO;
 import com.challenge.prothera.entities.Functionary;
 import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.FunctionaryRepository;
@@ -31,50 +30,59 @@ public class FunctionaryService {
     private PersonRepository personRepository;
 
     @Transactional
-    public FunctionaryDTO insert(FunctionaryDTO dto) {
-        String name = dto.getPersonDTO().getName();
-        LocalDate birthDate = dto.getPersonDTO().getBirthDate();
-        String office = dto.getOffice();
-        BigDecimal salary = dto.formaterSalary();
-
+    public FunctionaryRequestDTO insert(FunctionaryRequestDTO dto) {
         try {
-            Person person = new Person(name, birthDate);
-            Functionary functionary = new Functionary(null, office, salary, person);
-
+            Functionary functionary = new Functionary();
+            copyDtoToEntity(dto, functionary);
             functionary = functionaryRepository.save(functionary);
-            return new FunctionaryDTO(functionary);
+            return new FunctionaryRequestDTO(functionary);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("recurso não encontrado");
         }
     }
 
-    private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
+    private void copyDtoToEntity(FunctionaryRequestDTO dto, Functionary entity) {
         entity.setOffice(dto.getOffice());
-        entity.setSalary(dto.formaterSalary());
+        entity.setSalary(dto.getSalary());
+        Person person = new Person(
+                dto.getPersonDTO().getName(),
+                dto.getPersonDTO().getBirthDate());
+        entity.setPerson(person);
     }
 
     @Transactional
-    public FunctionaryDTO update(Long id, FunctionaryDTO dto) {
+    public FunctionaryRequestDTO update(Long id, FunctionaryRequestDTO dto) {
         try {
             Person person = personRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
             Functionary functionary = functionaryRepository.findById(id)
                     .orElseGet(() -> new Functionary());
 
-            if (functionary.getId() == null) {
-                functionary.setPerson(person);
-                copyDtoToEntity(dto, functionary);
-                functionaryRepository.save(functionary);
-            } else {
+            if (functionary.getId() == null)
+                copyDtoToEntity(dto, functionary, person);
+            else {
                 functionary = functionaryRepository.getReferenceById(id);
-                copyDtoToEntity(dto, functionary);
-                functionaryRepository.save(functionary);
+                copyMinDtoToEntity(dto, functionary);
             }
+            functionary = functionaryRepository.save(functionary);
 
-            return new FunctionaryDTO(functionary);
+            return new FunctionaryRequestDTO(functionary);
+
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
+    }
+
+    private void copyDtoToEntity(FunctionaryRequestDTO dto, Functionary entity, Person person) {
+        entity.setOffice(dto.getOffice());
+        entity.setSalary(dto.getSalary());
+        entity.setPerson(new Person());
+        entity.setPerson(person);
+    }
+
+    private void copyMinDtoToEntity(FunctionaryRequestDTO dto, Functionary entity) {
+        entity.setOffice(dto.getOffice());
+        entity.setSalary(dto.getSalary());
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -95,15 +103,9 @@ public class FunctionaryService {
     }
 
     @Transactional(readOnly = true)
-    public FunctionaryDTO findById(Long id) {
+    public FunctionaryResponseDTO findById(Long id) {
         Optional<Functionary> entity = functionaryRepository.findById(id);
-        return copyFunctionaryToDto(entity);
-    }
-
-    private FunctionaryDTO copyFunctionaryToDto(Optional<Functionary> entity) {
-        Functionary functionary = entity.get();
-        FunctionaryDTO dto = new FunctionaryDTO(functionary);
-        return dto;
+        return new FunctionaryResponseDTO(entity.get());
     }
 
     // @Transactional(readOnly = true)
@@ -113,10 +115,8 @@ public class FunctionaryService {
     // }
 
     @Transactional(readOnly = true)
-    public List<FunctionaryDTO> findAllFunctionaryWithPerson() {
+    public List<FunctionaryResponseDTO> findAllFunctionaryWithPerson() {
         List<Functionary> entity = functionaryRepository.findAllFunctionaryWithPerson();
-        // return entity.stream().map(x -> new FunctionaryDTO(x)).toList();
-
-        return entity.stream().map(x -> new FunctionaryDTO(x)).toList();
+        return entity.stream().map(x -> new FunctionaryResponseDTO(x)).toList();
     }
 }

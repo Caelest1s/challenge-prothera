@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.challenge.prothera.dto.FunctionaryDTO;
+import com.challenge.prothera.dto.FunctionaryRequestDTO;
+import com.challenge.prothera.dto.FunctionaryResponseDTO;
 import com.challenge.prothera.service.FunctionaryService;
 
 @RestController
@@ -26,7 +27,7 @@ public class FunctionaryController {
     private FunctionaryService serviceFunctionary;
 
     @PostMapping
-    public ResponseEntity<FunctionaryDTO> insert(@RequestBody FunctionaryDTO dto) {
+    public ResponseEntity<FunctionaryRequestDTO> insert(@RequestBody FunctionaryRequestDTO dto) {
         serviceFunctionary.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -34,7 +35,7 @@ public class FunctionaryController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<FunctionaryDTO> update(@PathVariable Long id, @RequestBody FunctionaryDTO dto) {
+    public ResponseEntity<FunctionaryRequestDTO> update(@PathVariable Long id, @RequestBody FunctionaryRequestDTO dto) {
         dto = serviceFunctionary.update(id, dto);
         return ResponseEntity.ok(dto);
     }
@@ -46,14 +47,14 @@ public class FunctionaryController {
     }
 
     @GetMapping(value = "/{id}")
-    public FunctionaryDTO findById(@PathVariable Long id) {
-        FunctionaryDTO result = serviceFunctionary.findById(id);
+    public FunctionaryResponseDTO findById(@PathVariable Long id) {
+        FunctionaryResponseDTO result = serviceFunctionary.findById(id);
         return result;
     }
 
     @GetMapping
-    public List<FunctionaryDTO> findAllFunctionaryWithPerson() {
-        List<FunctionaryDTO> result = serviceFunctionary.findAllFunctionaryWithPerson();
+    public List<FunctionaryResponseDTO> findAllFunctionaryWithPerson() {
+        List<FunctionaryResponseDTO> result = serviceFunctionary.findAllFunctionaryWithPerson();
         return result;
     }
 

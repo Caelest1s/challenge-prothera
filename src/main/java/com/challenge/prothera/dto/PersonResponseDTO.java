@@ -1,30 +1,29 @@
 package com.challenge.prothera.dto;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.challenge.prothera.entities.Person;
 
-public class PersonDTO {
+public class PersonResponseDTO {
 
     private Long id;
     private String name;
-
     // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate birthDate;
+    private String birthDate;
 
-    public PersonDTO() {
-
+    public PersonResponseDTO() {
     }
 
-    public PersonDTO(String name, LocalDate birthDate) {
+    public PersonResponseDTO(String name, LocalDate birthDate) {
         this.name = name;
-        this.birthDate = birthDate;
+        this.birthDate = formatterDate(birthDate);
     }
 
-    public PersonDTO(Person entity) {
+    public PersonResponseDTO(Person entity) {
         id = entity.getId();
         name = entity.getName();
-        birthDate = entity.getBirthDate();
+        birthDate = formatterDate(entity.getBirthDate());
     }
 
     public Long getId() {
@@ -35,7 +34,7 @@ public class PersonDTO {
         return name;
     }
 
-    public LocalDate getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
@@ -44,4 +43,8 @@ public class PersonDTO {
         return "PersonDTO [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
     }
 
+    private String formatterDate(LocalDate birthDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return birthDate.format(formatter);
+    }
 }

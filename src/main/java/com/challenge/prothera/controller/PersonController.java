@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.challenge.prothera.dto.PersonDTO;
+import com.challenge.prothera.dto.PersonRequestDTO;
+import com.challenge.prothera.dto.PersonResponseDTO;
 import com.challenge.prothera.service.PersonService;
 
 @RestController
@@ -26,7 +27,7 @@ public class PersonController {
     private PersonService personService;
 
     @PostMapping
-    public ResponseEntity<PersonDTO> insert(@RequestBody PersonDTO dto) {
+    public ResponseEntity<PersonRequestDTO> insert(@RequestBody PersonRequestDTO dto) {
         dto = personService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -34,7 +35,7 @@ public class PersonController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PersonDTO> update(@PathVariable Long id, @RequestBody PersonDTO dto) {
+    public ResponseEntity<PersonRequestDTO> update(@PathVariable Long id, @RequestBody PersonRequestDTO dto) {
         dto = personService.update(id, dto);
         return ResponseEntity.ok(dto);
     }
@@ -47,15 +48,14 @@ public class PersonController {
     }
 
     @GetMapping(value = "/{id}")
-    public PersonDTO findById(@PathVariable Long id) {
-        PersonDTO result = personService.findById(id);
-
+    public PersonResponseDTO findById(@PathVariable Long id) {
+        PersonResponseDTO result = personService.findById(id);
         return result;
     }
 
     @GetMapping
-    public List<PersonDTO> findAll() {
-        List<PersonDTO> result = personService.findAll();
+    public List<PersonResponseDTO> findAll() {
+        List<PersonResponseDTO> result = personService.findAll();
 
         return result;
     }

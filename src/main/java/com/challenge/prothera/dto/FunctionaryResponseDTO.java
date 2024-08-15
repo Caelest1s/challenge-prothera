@@ -7,27 +7,26 @@ import java.util.Locale;
 
 import com.challenge.prothera.entities.Functionary;
 
-public class FunctionaryDTO {
+public class FunctionaryResponseDTO {
 
     private Long id;
     private String office;
     private String salary;
+    private PersonResponseDTO personDTO;
 
-    private PersonDTO personDTO;
-
-    public FunctionaryDTO() {
+    public FunctionaryResponseDTO() {
     }
 
-    public FunctionaryDTO(String office, BigDecimal salary) {
+    public FunctionaryResponseDTO(String office, BigDecimal salary) {
         this.office = office;
         this.salary = formaterSalary(salary);
     }
 
-    public FunctionaryDTO(Functionary entity) {
+    public FunctionaryResponseDTO(Functionary entity) {
         id = entity.getId();
         office = entity.getOffice();
         salary = formaterSalary(entity.getSalary());
-        personDTO = new PersonDTO(entity.getPerson());
+        personDTO = new PersonResponseDTO(entity.getPerson());
     }
 
     public Long getId() {
@@ -42,7 +41,7 @@ public class FunctionaryDTO {
         return salary;
     }
 
-    public PersonDTO getPersonDTO() {
+    public PersonResponseDTO getPersonDTO() {
         return personDTO;
     }
 

@@ -31,7 +31,6 @@ public class Functionary {
     private Person person;
 
     public Functionary() {
-
     }
 
     public Functionary(Long id, String office, BigDecimal salary, Person person) {

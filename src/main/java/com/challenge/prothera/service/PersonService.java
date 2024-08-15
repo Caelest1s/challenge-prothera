@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.challenge.prothera.dto.PersonDTO;
+import com.challenge.prothera.dto.PersonRequestDTO;
+import com.challenge.prothera.dto.PersonResponseDTO;
 import com.challenge.prothera.entities.Person;
 import com.challenge.prothera.repositories.PersonRepository;
 import com.challenge.prothera.service.exceptions.DataBaseException;
@@ -24,25 +25,25 @@ public class PersonService {
     private PersonRepository personRepository;
 
     @Transactional
-    public PersonDTO insert(PersonDTO dto) {
+    public PersonRequestDTO insert(PersonRequestDTO dto) {
         Person entity = new Person();
         copyDtoToPerson(dto, entity);
         personRepository.save(entity);
         return dto;
     }
 
-    private void copyDtoToPerson(PersonDTO dto, Person entity) {
+    private void copyDtoToPerson(PersonRequestDTO dto, Person entity) {
         entity.setName(dto.getName());
         entity.setBirthDate(dto.getBirthDate());
     }
 
     @Transactional
-    public PersonDTO update(Long id, PersonDTO dto) {
+    public PersonRequestDTO update(Long id, PersonRequestDTO dto) {
         try {
             Person entity = personRepository.getReferenceById(id);
             copyDtoToPerson(dto, entity);
             entity = personRepository.save(entity);
-            return new PersonDTO(entity);
+            return new PersonRequestDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
@@ -60,20 +61,14 @@ public class PersonService {
     }
 
     @Transactional(readOnly = true)
-    public PersonDTO findById(Long id) {
+    public PersonResponseDTO findById(Long id) {
         Optional<Person> result = personRepository.findById(id);
-        return copyPersonToDto(result);
-    }
-
-    private PersonDTO copyPersonToDto(Optional<Person> entity) {
-        Person person = entity.get();
-        PersonDTO dto = new PersonDTO(person);
-        return dto;
+        return new PersonResponseDTO(result.get());
     }
 
     @Transactional(readOnly = true)
-    public List<PersonDTO> findAll() {
+    public List<PersonResponseDTO> findAll() {
         List<Person> result = personRepository.findAllPerson();
-        return result.stream().map(x -> new PersonDTO(x)).toList();
+        return result.stream().map(x -> new PersonResponseDTO(x)).toList();
     }
 }
