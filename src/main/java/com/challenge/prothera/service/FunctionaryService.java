@@ -1,5 +1,6 @@
 package com.challenge.prothera.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class FunctionaryService {
         String name = dto.getPersonDTO().getName();
         LocalDate birthDate = dto.getPersonDTO().getBirthDate();
         String office = dto.getOffice();
-        Double salary = dto.getSalary();
+        BigDecimal salary = dto.formaterSalary();
 
         try {
             Person person = new Person(name, birthDate);
@@ -49,7 +50,7 @@ public class FunctionaryService {
 
     private void copyDtoToEntity(FunctionaryDTO dto, Functionary entity) {
         entity.setOffice(dto.getOffice());
-        entity.setSalary(dto.getSalary());
+        entity.setSalary(dto.formaterSalary());
     }
 
     @Transactional
@@ -114,6 +115,8 @@ public class FunctionaryService {
     @Transactional(readOnly = true)
     public List<FunctionaryDTO> findAllFunctionaryWithPerson() {
         List<Functionary> entity = functionaryRepository.findAllFunctionaryWithPerson();
+        // return entity.stream().map(x -> new FunctionaryDTO(x)).toList();
+
         return entity.stream().map(x -> new FunctionaryDTO(x)).toList();
     }
 }

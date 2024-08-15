@@ -1,5 +1,7 @@
 package com.challenge.prothera.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ public class Functionary {
     @Column
     private String office;
     @Column
-    private Double salary;
+    private BigDecimal salary;
 
     @OneToOne(optional = false)
     @MapsId
@@ -32,7 +34,7 @@ public class Functionary {
 
     }
 
-    public Functionary(Long id, String office, Double salary, Person person) {
+    public Functionary(Long id, String office, BigDecimal salary, Person person) {
         this.id = id;
         this.office = office;
         this.salary = salary;
@@ -55,11 +57,11 @@ public class Functionary {
         this.office = office;
     }
 
-    public Double getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
 
