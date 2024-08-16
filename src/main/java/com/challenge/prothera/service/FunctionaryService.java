@@ -53,21 +53,22 @@ public class FunctionaryService {
     @Transactional
     public FunctionaryRequestDTO update(Long id, FunctionaryRequestDTO dto) {
         try {
-            Person person = personRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
-            Functionary functionary = functionaryRepository.findById(id)
-                    .orElseGet(() -> new Functionary());
+            Functionary functionary;
 
-            if (functionary.getId() == null)
-                copyDtoToEntity(dto, functionary, person);
-            else {
+            if (functionaryRepository.existsById(id)) {
                 functionary = functionaryRepository.getReferenceById(id);
                 copyMinDtoToEntity(dto, functionary);
+            } else if (personRepository.existsById(id)) {
+                Person person = personRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
+                functionary = new Functionary();
+                copyDtoToEntity(dto, functionary, person);
+            } else {
+                throw new ResourceNotFoundException("Funcionário não encontrado");
             }
             functionary = functionaryRepository.save(functionary);
 
             return new FunctionaryRequestDTO(functionary);
-
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
