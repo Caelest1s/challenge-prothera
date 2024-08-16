@@ -63,9 +63,9 @@ public class FunctionaryService {
                         .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
                 functionary = new Functionary();
                 copyDtoToEntity(dto, functionary, person);
-            } else {
+            } else
                 throw new ResourceNotFoundException("Funcionário não encontrado");
-            }
+
             functionary = functionaryRepository.save(functionary);
 
             return new FunctionaryRequestDTO(functionary);
