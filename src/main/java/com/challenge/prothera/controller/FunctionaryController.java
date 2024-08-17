@@ -1,5 +1,6 @@
 package com.challenge.prothera.controller;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -58,19 +60,9 @@ public class FunctionaryController {
         return result;
     }
 
-    // public List<FunctionaryDTO> populateListFunctionary() {
-    // List<FunctionaryDTO> listFunctionary = new ArrayList<FunctionaryDTO>();
-    // listFunctionary.add(new FunctionaryDTO("Operador", 2009.44D));
-    // listFunctionary.add(new FunctionaryDTO("Operador", 2284.38D));
-    // listFunctionary.add(new FunctionaryDTO("Coordenador", 9836.14D));
-    // listFunctionary.add(new FunctionaryDTO("Diretor", 19199.88D));
-    // listFunctionary.add(new FunctionaryDTO("Recepcionista", 2234.68D));
-    // listFunctionary.add(new FunctionaryDTO("Operador", 1582.72D));
-    // listFunctionary.add(new FunctionaryDTO("Contador", 4071.84D));
-    // listFunctionary.add(new FunctionaryDTO("Gerente", 3017.45D));
-    // listFunctionary.add(new FunctionaryDTO("Eletricista", 1606.85D));
-    // listFunctionary.add(new FunctionaryDTO("Gerente", 2799.93D));
-    // return listFunctionary;
-    // }
-
+    @PutMapping(value = "/salary")
+    public List<FunctionaryResponseDTO> updateSalaryAll(@RequestParam BigDecimal percentage) {
+        List<FunctionaryResponseDTO> result = serviceFunctionary.updateSalaryAll(percentage);
+        return result;
+    }
 }

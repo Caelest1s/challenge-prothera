@@ -1,5 +1,6 @@
 package com.challenge.prothera.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,16 +59,13 @@ public class FunctionaryService {
             if (functionaryRepository.existsById(id)) {
                 functionary = functionaryRepository.getReferenceById(id);
                 copyMinDtoToEntity(dto, functionary);
-            } else if (personRepository.existsById(id)) {
+            } else {
                 Person person = personRepository.findById(id)
                         .orElseThrow(() -> new IllegalArgumentException("Id inválido: " + id));
                 functionary = new Functionary();
                 copyDtoToEntity(dto, functionary, person);
-            } else
-                throw new ResourceNotFoundException("Funcionário não encontrado");
-
+            }
             functionary = functionaryRepository.save(functionary);
-
             return new FunctionaryRequestDTO(functionary);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
@@ -119,5 +117,26 @@ public class FunctionaryService {
     public List<FunctionaryResponseDTO> findAllFunctionaryWithPerson() {
         List<Functionary> entity = functionaryRepository.findAllFunctionaryWithPerson();
         return entity.stream().map(x -> new FunctionaryResponseDTO(x)).toList();
+    }
+
+    @Transactional
+    public List<FunctionaryResponseDTO> updateSalaryAll(BigDecimal percentage) {
+        List<Functionary> result = functionaryRepository.findAll();
+        result = updateSalary(result, percentage);
+        functionaryRepository.saveAll(result);
+
+        return result.stream().map(x -> new FunctionaryResponseDTO(x)).toList();
+    }
+
+    private List<Functionary> updateSalary(List<Functionary> functionaries, BigDecimal percentage) {
+        for (Functionary functionary : functionaries) {
+            BigDecimal currentSalary = functionary.getSalary();
+            BigDecimal increase = currentSalary.multiply(percentage).divide(new BigDecimal(100));
+            BigDecimal newSalary = currentSalary.add(increase);
+
+            functionary.setSalary(newSalary);
+        }
+
+        return functionaries;
     }
 }
