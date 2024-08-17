@@ -61,8 +61,8 @@ public class FunctionaryController {
     }
 
     @PutMapping(value = "/salary")
-    public List<FunctionaryResponseDTO> updateSalaryAll(@RequestParam BigDecimal percentage) {
-        List<FunctionaryResponseDTO> result = serviceFunctionary.updateSalaryAll(percentage);
-        return result;
+    public ResponseEntity<List<FunctionaryResponseDTO>> updateSalaryFunctionaries(@RequestParam BigDecimal percentage) {
+        List<FunctionaryResponseDTO> result = serviceFunctionary.updateSalaryFunctionaries(percentage);
+        return ResponseEntity.ok(result);
     }
 }

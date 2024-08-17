@@ -120,23 +120,25 @@ public class FunctionaryService {
     }
 
     @Transactional
-    public List<FunctionaryResponseDTO> updateSalaryAll(BigDecimal percentage) {
-        List<Functionary> result = functionaryRepository.findAll();
-        result = updateSalary(result, percentage);
-        functionaryRepository.saveAll(result);
-
-        return result.stream().map(x -> new FunctionaryResponseDTO(x)).toList();
+    public FunctionaryResponseDTO updateSalary(Long id, BigDecimal percentage) {
+        Functionary result = functionaryRepository.findById(id).get();
+        result = newSalaryUpdate(result, percentage);
+        functionaryRepository.save(result);
+        return new FunctionaryResponseDTO(result);
     }
 
-    private List<Functionary> updateSalary(List<Functionary> functionaries, BigDecimal percentage) {
-        for (Functionary functionary : functionaries) {
-            BigDecimal currentSalary = functionary.getSalary();
-            BigDecimal increase = currentSalary.multiply(percentage).divide(new BigDecimal(100));
-            BigDecimal newSalary = currentSalary.add(increase);
+    private Functionary newSalaryUpdate(Functionary entity, BigDecimal percentage) {
+        BigDecimal currentSalary = entity.getSalary();
+        BigDecimal increase = currentSalary.multiply(percentage).divide(new BigDecimal(100));
+        BigDecimal newSalary = currentSalary.add(increase);
+        entity.setSalary(newSalary);
+        return entity;
+    }
 
-            functionary.setSalary(newSalary);
-        }
-
-        return functionaries;
+    @Transactional
+    public List<FunctionaryResponseDTO> updateSalaryFunctionaries(BigDecimal percentage) {
+        functionaryRepository.updateAllSalaries(percentage);
+        List<Functionary> result = functionaryRepository.findAll();
+        return result.stream().map(x -> new FunctionaryResponseDTO(x)).toList();
     }
 }
